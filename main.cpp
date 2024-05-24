@@ -1,55 +1,55 @@
 #include <iostream>
-#include <vector>
+#include <chrono>
+#define COLS 30000
+#define ROWS 30000
 
 
-int sum_v(int** a, int cols, int rows){
+int sum_v(int** a){
     int sum = 0;
-    std::cout << "Vertical sequence: ";
-    for(int y = 0;y < rows;y++){
-        for(int x = 0; x < cols;x++){
+    for(int y = 0;y < COLS;y++){
+        for(int x = 0; x < ROWS;x++){
             sum += a[x][y];
-            std::cout << a[x][y] << " ";
         }
     }
-    std::cout << "\nSum: ";
     return sum;
 }
 
-int sum_g(int** a, int cols, int rows){
+int sum_g(int** a){
     int sum = 0;
-    std::cout << "Horizontal sequence: ";
-    for(int x = 0;x < cols;x++){
-        for(int y = 0; y < rows;y++){
+    for(int x = 0;x < ROWS;x++){
+        for(int y = 0; y < COLS;y++){
             sum += a[x][y];
-            std::cout << a[x][y] << " ";
         }
     }
-    std::cout << "\nSum: ";
     return sum;
 }
 
 
 int main(){
-    int rows = 10;
-	int cols = 10;
-    int val = 0;
-	int** mtx = new int*[rows];
-	for(int x = 0; x < rows; x++){
-		mtx[x] = new int[cols];
+    long val = 0;
+	int** mtx = new int*[ROWS];
+	for(int x = 0; x < ROWS; x++){
+		mtx[x] = new int[COLS];
 	}
-    while(val < cols*rows){
-        for(int x = 0;x < cols;x++){
-            for(int y = 0; y < rows;y++){
+    while(val < COLS * ROWS){
+        for(int x = 0; x < COLS; x++){
+            for(int y = 0; y < ROWS; y++){
                 mtx[x][y] = val;
                 val += 1;
             }
         }
     }
-    std::cout << sum_v(mtx, cols, rows) << "\n";
-    std::cout << sum_g(mtx, cols, rows) << "\n";
-    for(int i = 0; i < rows; i++){
+
+    auto start = std::chrono::high_resolution_clock::now();
+    sum_g(mtx);
+    //sum_v(mtx);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
+    std::cout << duration.count() << "\n";
+
+    for(int i = 0; i < ROWS; ++i){
         delete mtx[i];
     }
     delete mtx;
-    
+
 }
